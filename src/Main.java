@@ -10,9 +10,10 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String vh = scanner.nextLine();
         String otvet = calc(vh);
+        System.out.println(otvet);
     }
 
-    public static String calc(String input) {
+    public static String calc(String input) throws NumberFormatException{
         String[] bukveniCifri;//убрали все пробелы из входящего выражения и разбили строку на слова по знакам +,-,*,/
         bukveniCifri = input.replaceAll("\\s+", "").split("\\+|\\*|/|-");
 
@@ -40,10 +41,10 @@ public class Main {
 
                     RimskieCifri ano = RimskieCifri.valueOf(valuesRimskieCifri[j]);
                     bukveniCifri[i] = ano.getArabskie();
-                    System.out.println(bukveniCifri[i]);
+                  //  System.out.println(bukveniCifri[i]);
                 }
             }
-            if (i < 1 && i > 0) {
+            if (i < 1 || i > 0) {
                 try {
                     throw new NumberFormatException("throws Exception //т.к. используются одновременно разные системы счисления");
 
@@ -63,7 +64,62 @@ public class Main {
                 System.out.println("throws Exception //заданные числа не входят в диапазан от 1 до 10");
             }
         }
-        String otvet =Calculation.getCalculation(valuesRimskieCifri, input, chislo1, chislo2);
+        int result;
+        String otvet=null;
+        String[] bukveniCifriVh = input.replaceAll("\\s+", "").split("\\+|\\*|/|-");
+        String vichisleniieSlov;
+        int plus = input.indexOf("+");//ищем плюс
+        int minus = input.indexOf("-");
+        int umnogh = input.indexOf("*");
+        int delenie = input.indexOf("/");
+
+        if (plus > 0) {
+            result = chislo1 + chislo2;
+            vichisleniieSlov = Integer.toString(result);//переделываем полученый цифровой результат в строку
+            if (Calculation.getRimVScanner(bukveniCifriVh, valuesRimskieCifri)) {//проверяем во входящем выраении есть ли римские цифры и если да, то считаем римский ответ
+                RimskieCifri Rim = RimskieCifri.getRimByArab(vichisleniieSlov);// получаем согласно арабскому результату значение соответ enum
+                return otvet =Rim.name();
+            } else {
+                return otvet =vichisleniieSlov;
+            }
+            } else if (minus > 0) {
+            result = chislo1 - chislo2;
+            vichisleniieSlov = Integer.toString(result);//переделываем полученый цифровой результат в строку
+
+            if (Calculation.getRimVScanner(bukveniCifriVh, valuesRimskieCifri) && result > 0) {//проверяем во входящем выраении есть ли римские цифры и если да, то считаем римский ответ
+                try {
+                        RimskieCifri Rim = RimskieCifri.getRimByArab(vichisleniieSlov);// получаем согласно арабскому результату значение соответ enum
+                       System.out.println("Ответ равен: " + Rim);
+                    throw new IOException();
+                   } catch (IOException e) {
+                    System.out.println("//т.к. в римской системе нет отрицательных чисел");
+                  }
+
+            } else {
+                return otvet =vichisleniieSlov;
+            }
+
+
+        } else if (umnogh > 0) {
+            result = chislo1 * chislo2;
+            vichisleniieSlov = Integer.toString(result);//переделываем полученый цифровой результат в строку
+            if (Calculation.getRimVScanner(bukveniCifriVh, valuesRimskieCifri)) {//проверяем во входящем выраении есть ли римские цифры и если да, то считаем римский ответ
+                RimskieCifri Rim = RimskieCifri.getRimByArab(vichisleniieSlov);// получаем согласно арабскому результату значение соответ enum
+                return otvet =Rim.name();
+            } else {
+                return otvet =vichisleniieSlov;
+            }
+
+        } else if (delenie > 0) {
+            result = chislo1 / chislo2;
+            vichisleniieSlov = Integer.toString(result);//переделываем полученый цифровой результат в строку
+            if (Calculation.getRimVScanner(bukveniCifriVh, valuesRimskieCifri)) {//проверяем во входящем выраении есть ли римские цифры и если да, то считаем римский ответ
+                RimskieCifri Rim = RimskieCifri.getRimByArab(vichisleniieSlov);// получаем согласно арабскому результату значение соответ enum
+                return otvet = Rim.name();
+            } else {
+                return otvet = vichisleniieSlov;
+            }
+        }
         return otvet;
 
     }

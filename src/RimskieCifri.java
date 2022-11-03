@@ -4,10 +4,11 @@ public enum RimskieCifri {
     RimskieCifri (String arabskie) {
         this.arabskie = arabskie;
     }
-    public String getArabskie(){
+    public String getArabskie() {
         return arabskie;
     }
-    public static RimskieCifri getRimByArab(String arabskie) {
+
+    public static RimskieCifri getRimByArab(String arabskie) throws IllegalArgumentException{
         for (RimskieCifri rim : values()) {
             if (rim.getArabskie().equals(arabskie)) {
                 return rim;
